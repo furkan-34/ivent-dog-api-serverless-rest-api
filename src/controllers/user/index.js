@@ -5,10 +5,6 @@ const {
   AdminSetUserPasswordCommand
 } = require("@aws-sdk/client-cognito-identity-provider");
 
-const express = require("express");
-const user = require("express").Router();
-
-
 
 const listUsers = async (req, res) => {
   const cognitoClient = new CognitoIdentityProviderClient({

@@ -43,12 +43,17 @@ provider:
     DogsTable: ${self:custom.dogsTableName}
     USER_POOL: 
       Ref: UserPool
+    USER_CLIENT:
+      Ref: UserClient
     SERVICE_REGION: ${aws:region}
     DOG_API: ${self:custom.dogApiUrl}
 
 functions:
   httpApi:
     handler: index.handler
+    middleware:
+      pre:
+        - src/middlewares/auth.authMiddleware
     events:
       - httpApi:
           method: '*'
@@ -110,3 +115,6 @@ resources:
         ExplicitAuthFlows:
           - "ADMIN_NO_SRP_AUTH"
           - "USER_PASSWORD_AUTH"
+
+plugins:
+  - serverless-middleware

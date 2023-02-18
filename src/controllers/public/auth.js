@@ -48,6 +48,19 @@ const signUpUser = async (event, context)=> {
     return response
 }
 
+const signInUser = async (event, context)=> {
+   
+  const { email, password } = JSON.parse(event.body);
+
+  
+  let response = {
+      statusCode: 200,
+      body: JSON.stringify({ message: `ok` })
+  };
+
+
+  return response
+}
 
 module.exports = {
     signUpUser

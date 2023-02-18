@@ -1,10 +1,9 @@
 const express = require("express");
-const serverless = require("serverless-http");
-const { DynamoDBClient, PutItemCommand, DeleteItemCommand, QueryCommand, ScanCommand, GetItemCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, PutItemCommand, DeleteItemCommand, ScanCommand } = require("@aws-sdk/client-dynamodb");
 const axios = require("axios");
 const { unixTimestamp } = require("../../helpers/timestamp");
 const { v4: uuidv4 } = require('uuid');
-const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
+const { unmarshall } = require("@aws-sdk/util-dynamodb");
 
 const app = express();
 app.use(express.json());
@@ -45,7 +44,7 @@ const listImages = async (req, res) => {
   return res.status(200).json({ images: images })
 }
 
-const AddToFavorites = async (req, res) => {
+const addToFavorites = async (req, res) => {
   const { image } = req.body
 
   const dynamoDBClient = new DynamoDBClient({
@@ -69,7 +68,8 @@ const AddToFavorites = async (req, res) => {
   }
 }
 
-const DeleteFromFavorites = async (req, res) => {
+const deleteFromFavorites = async (req, res) => {
+  
   const { identifier } = req.params
 
   const dynamoDBClient = new DynamoDBClient({
@@ -131,7 +131,7 @@ const listFavorites = async (req, res) => {
 module.exports = {
   listBreeds,
   listImages,
-  AddToFavorites,
-  DeleteFromFavorites,
+  addToFavorites,
+  deleteFromFavorites,
   listFavorites
 }
