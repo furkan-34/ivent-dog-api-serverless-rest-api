@@ -4,6 +4,7 @@ const axios = require("axios");
 const { unixTimestamp } = require("../../helpers/timestamp");
 const { v4: uuidv4 } = require('uuid');
 const { unmarshall } = require("@aws-sdk/util-dynamodb");
+const { decodeToken } = require("../../helpers/jwt");
 
 const app = express();
 app.use(express.json());
@@ -46,6 +47,9 @@ const listImages = async (req, res) => {
 
 const addToFavorites = async (req, res) => {
   const { image } = req.body
+  const { authorization } = req.headers
+  
+  const payload = await decodeToken(authorization)
 
   const dynamoDBClient = new DynamoDBClient({
     region: process.env.SERVICE_REGION
@@ -55,7 +59,7 @@ const addToFavorites = async (req, res) => {
     Item: {
       identifier: { S: `${uuidv4()}` },
       image: { S: `${image}` },
-      user: { S: `furkancigerlioglu` },
+      username: { S: `${payload.username}` },
       timestamp: { N: `${unixTimestamp()}` },
     },
   })
@@ -71,7 +75,10 @@ const addToFavorites = async (req, res) => {
 const deleteFromFavorites = async (req, res) => {
   
   const { identifier } = req.params
-
+  const { authorization } = req.headers
+  
+  const payload = await decodeToken(authorization)
+  
   const dynamoDBClient = new DynamoDBClient({
     region: process.env.SERVICE_REGION
   })
@@ -81,7 +88,7 @@ const deleteFromFavorites = async (req, res) => {
     FilterExpression: "identifier = :identifier and username = :username",
     ExpressionAttributeValues: {
       ":identifier": { "S": `${identifier}` },
-      ":username": { "S": "furkancigerlioglu@gmail.com" }
+      ":username": { "S": `${payload.username}` }
     },
     Limit: 1
   })
@@ -107,6 +114,9 @@ const deleteFromFavorites = async (req, res) => {
 
 const listFavorites = async (req, res) => {
 
+  const { authorization } = req.headers
+  const payload = await decodeToken(authorization)
+
   const dynamoDBClient = new DynamoDBClient({
     region: process.env.SERVICE_REGION
   })
@@ -114,7 +124,7 @@ const listFavorites = async (req, res) => {
     TableName: process.env.DogsTable,
     FilterExpression: "username = :username",
     ExpressionAttributeValues: {
-        ":username": { "S": "furkancigerlioglu@gmail.com" }
+        ":username": { "S": `${payload.username}` }
     }
   })
 

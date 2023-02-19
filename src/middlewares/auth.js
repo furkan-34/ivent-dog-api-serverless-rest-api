@@ -1,4 +1,4 @@
-const { CognitoJwtVerifier } = require("aws-jwt-verify")
+const { decodeToken } = require("../helpers/jwt");
 
 const authMiddleware = async (event, context) => {
   let authFail = false
@@ -7,21 +7,15 @@ const authMiddleware = async (event, context) => {
       
   const authorization = event.headers.authorization;  
   const access_token = authorization.split(" ")[1];
-  const verifier = CognitoJwtVerifier.create({
-    userPoolId: process.env.USER_POOL,
-    tokenUse: "access",
-    clientId: process.env.USER_CLIENT,
-  });
-
   if (!access_token) authFail = true
 
   try {
-    await verifier.verify(access_token);
+    var checkToken = await decodeToken(authorization)
   } catch (error) {
     authFail = false
   } 
 
-  if (authFail) {
+  if (authFail || !checkToken) {
     context.end();
     return {
       statusCode: 401,
