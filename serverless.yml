@@ -66,6 +66,12 @@ functions:
       - httpApi:
             method: POST
             path: /auth/signup
+  signInUser:
+    handler: src/controllers/public/auth.signInUser
+    events:
+      - httpApi:
+            method: POST
+            path: /auth/signin
 
 resources:
   Resources:
