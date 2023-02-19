@@ -6,8 +6,8 @@ const authMiddleware = async (event, context) => {
   if (!event.headers.authorization || !event.headers.authorization.startsWith("Bearer")) authFail = true
       
   const authorization = event.headers.authorization;  
-  const access_token = authorization.split(" ")[1];
-  if (!access_token) authFail = true
+  const id_token = authorization.split(" ")[1];
+  if (!id_token) authFail = true
 
   try {
     var checkToken = await decodeToken(authorization)
@@ -19,6 +19,11 @@ const authMiddleware = async (event, context) => {
     context.end();
     return {
       statusCode: 401,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Credentials': 'true'
+      },
       body: JSON.stringify({ error: "Unauthorized" })
     };
   }

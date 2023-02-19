@@ -25,6 +25,26 @@ provider:
             - Fn::GetAtt: [ DogsTable, Arn ]
             - Fn::GetAtt: [ UserPool, Arn ]
   httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedMethods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - DELETE
+      allowedHeaders:
+        - Content-Type
+        - X-Amz-Date
+        - Authorization
+        - X-Api-Key
+        - X-Amz-Security-Token
+        - X-Amz-User-Agent
+        - X-Transaction-Key
+        - Access-Control-Allow-Origin
+        - Access-Control-Allow-Headers
+        - Access-Control-Allow-Credentials
     authorizers:
       jwtAuthorizer:
         type: jwt
@@ -69,9 +89,19 @@ functions:
   signInUser:
     handler: src/controllers/public/auth.signInUser
     events:
-      - httpApi:
+      - http:
             method: POST
             path: /auth/signin
+            cors:
+              origin: '*' # <-- Specify allowed origin
+              headers: # <-- Specify allowed headers
+                - Content-Type
+                - X-Amz-Date
+                - Authorization
+                - X-Api-Key
+                - X-Amz-Security-Token
+                - X-Amz-User-Agent
+              allowCredentials: false
 
 resources:
   Resources:

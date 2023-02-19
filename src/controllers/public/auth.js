@@ -66,14 +66,19 @@ const signInUser = async (event, context)=> {
     ClientId: process.env.USER_CLIENT
  })
 
- let response = {
-  statusCode: 200,
-  body: JSON.stringify({ message: `ok` })
-};
+  let response = {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Credentials': 'true'
+    },
+    body: ""
+  };
 
  try {
   var signIn = await cognitoClient.send(initiateAuthCommand)
-  response.body = JSON.stringify({ signIn: signIn })
+  response.body = JSON.stringify({ signIn: signIn.AuthenticationResult })
  } catch (error) {
   response.body = JSON.stringify({ error: error })
  }

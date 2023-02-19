@@ -1,7 +1,7 @@
 const express = require("express");
 const serverless = require("serverless-http");
 const { listBreeds, listImages, addToFavorites, deleteFromFavorites, listFavorites } = require("./src/controllers/dog");
-const { signUpUser, listUsers } = require("./src/controllers/user");
+const { listUsers, getUserMe } = require("./src/controllers/user");
 
 const app = express();
 app.use(express.json());
@@ -12,11 +12,10 @@ app.get("/users", async function (req, res) {
   return listUsers(req, res)
 });
 
-app.post("/users/signup", async function (req, res) {
-
-  return signUpUser(req, res)
+app.get("/users/me", async function (req, res) {
+  
+  return getUserMe(req, res)
 });
-
 
 app.get("/dogs/breeds", async function (req, res) {
 
