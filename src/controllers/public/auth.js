@@ -34,7 +34,12 @@ const signUpUser = async (event, context)=> {
     })
 
     let response = {
-        statusCode: 200,
+        statusCode: 201,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Credentials': 'true'
+        },
         body: JSON.stringify({ message: `${email} is registered successfully!` })
     };
 
@@ -42,7 +47,7 @@ const signUpUser = async (event, context)=> {
       await cognitoClient.send(adminCreateUserCommand)
       await cognitoClient.send(adminSetUserPasswordCommand)
     } catch (error) {
-        console.log(process.env.USER_POOL)
+        response.statusCode = 500
         response.body = JSON.stringify({ error: error })
     }
   
@@ -80,6 +85,7 @@ const signInUser = async (event, context)=> {
   var signIn = await cognitoClient.send(initiateAuthCommand)
   response.body = JSON.stringify({ signIn: signIn.AuthenticationResult })
  } catch (error) {
+  response.statusCode = 401
   response.body = JSON.stringify({ error: error })
  }
 

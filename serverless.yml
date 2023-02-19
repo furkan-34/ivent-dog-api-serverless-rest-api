@@ -83,9 +83,19 @@ functions:
   signUpUser:
     handler: src/controllers/public/auth.signUpUser
     events:
-      - httpApi:
+      - http:
             method: POST
             path: /auth/signup
+            cors:
+              origin: '*'
+              headers:
+                - Content-Type
+                - X-Amz-Date
+                - Authorization
+                - X-Api-Key
+                - X-Amz-Security-Token
+                - X-Amz-User-Agent
+              allowCredentials: false
   signInUser:
     handler: src/controllers/public/auth.signInUser
     events:
@@ -93,8 +103,8 @@ functions:
             method: POST
             path: /auth/signin
             cors:
-              origin: '*' # <-- Specify allowed origin
-              headers: # <-- Specify allowed headers
+              origin: '*'
+              headers:
                 - Content-Type
                 - X-Amz-Date
                 - Authorization
