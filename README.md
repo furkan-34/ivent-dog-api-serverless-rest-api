@@ -1,4 +1,4 @@
-# Ivent Test Case - Dog Api Serverless Stack
+# Ivent Test Case - Dog Api Serverless 
 ## Summary
 
 Project used for test case.
