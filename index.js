@@ -12,7 +12,7 @@ app.get("/users", async function (req, res) {
   return listUsers(req, res)
 });
 
-app.get("/users/me", async function (req, res) {
+app.get("/user/me", async function (req, res) {
   
   return getUserMe(req, res)
 });
